@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\Commands\Parents\CommandBase.cs" />
+    <Compile Include="ViewModels\Commands\ParameterlessCommand.cs" />
     <Compile Include="ViewModels\Parents\NotificationBase.cs" />
     <Compile Include="ViewModels\TemplateViewModel.cs" />
     <Compile Include="Views\TemplateView.xaml.cs">

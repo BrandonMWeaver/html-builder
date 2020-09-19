@@ -11,6 +11,6 @@
         <vm:TemplateViewModel x:Key="ViewModel" />
     </UserControl.Resources>
     <Grid DataContext="{StaticResource ViewModel}">
-        
+        <Button Command="{Binding OpenCommand}" />
     </Grid>
 </UserControl>

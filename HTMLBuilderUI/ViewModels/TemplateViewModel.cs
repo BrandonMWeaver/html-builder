@@ -1,4 +1,5 @@
 ﻿using HTMLBuilderUI.HTML.Models;
+using HTMLBuilderUI.ViewModels.Commands.Template;
 using HTMLBuilderUI.ViewModels.Parents;
 using System;
 using System.Collections.Generic;
@@ -23,16 +24,24 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        public ParameterlessCommand OpenCommand { get; set; }
+
         public TemplateViewModel()
         {
             this.TemplateModel = new TemplateModel();
+
+            this.OpenCommand = new ParameterlessCommand(this.Open);
+
             this.TemplateModel.Elements.Add(new ElementModel("h1", "<a href=\"https://google.com\">Test</a>"));
 
             using (StreamWriter sw = new StreamWriter("../../Storage/test.html"))
             {
                 sw.WriteLine(this.TemplateModel);
             }
+        }
 
+        public void Open()
+        {
             System.Diagnostics.Process.Start("C:\\Users\\a7xnc\\source\\repos\\HTMLBuilder\\HTMLBuilderUI\\Storage\\test.html");
         }
     }
