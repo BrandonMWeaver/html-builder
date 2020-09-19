@@ -10,6 +10,11 @@ namespace HTMLBuilderUI.HTML.Models
     {
         public List<ElementModel> Elements { get; set; }
 
+        public TemplateModel()
+        {
+            this.Elements = new List<ElementModel>();
+        }
+
         public override string ToString()
         {
             string body = "";
