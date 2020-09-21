@@ -32,7 +32,13 @@ namespace HTMLBuilderUI.ViewModels
 
             this.OpenCommand = new ParameterlessCommand(this.Open);
 
-            this.TemplateModel.Elements.Add(new ElementModel("h1", "<a href=\"https://google.com\">Test</a>"));
+            this.TemplateModel.Elements.Add(new ElementModel("html"));
+            this.TemplateModel.Elements[0].Depth = 0;
+            this.TemplateModel.Elements[0].Append(new ElementModel("head"));
+            this.TemplateModel.Elements[0].Elements[0].Append(new ElementModel("title", "Test"));
+            this.TemplateModel.Elements[0].Append(new ElementModel("body"));
+            this.TemplateModel.Elements[0].Elements[1].Append(new ElementModel("h1"));
+            this.TemplateModel.Elements[0].Elements[1].Elements[0].Append(new ElementModel("a", new List<string>() { "href=\"https://google.com\"" }, "Test"));
 
             using (StreamWriter sw = new StreamWriter("../../Storage/test.html"))
             {

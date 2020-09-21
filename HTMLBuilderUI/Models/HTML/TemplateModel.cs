@@ -17,12 +17,12 @@ namespace HTMLBuilderUI.HTML.Models
 
         public override string ToString()
         {
-            string body = "";
+            string html = "";
             foreach(ElementModel element in this.Elements)
             {
-                body = $"{body}{element}";
+                html = $"{html}{element}";
             }
-            return $"<!DOCTYPE html><html><head><title>Test</title></head><body>{body}</body></html>";
+            return $"<!DOCTYPE html>{html}";
         }
     }
 }

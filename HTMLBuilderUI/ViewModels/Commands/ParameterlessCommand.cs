@@ -9,7 +9,7 @@ namespace HTMLBuilderUI.ViewModels.Commands.Template
 {
     class ParameterlessCommand : CommandBase
     {
-        private Action _function;
+        private readonly Action _function;
 
         public ParameterlessCommand(Action function)
         {
