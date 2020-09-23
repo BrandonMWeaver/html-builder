@@ -11,52 +11,92 @@
         <vm:DocumentViewModel x:Key="ViewModel" />
     </UserControl.Resources>
     <Grid DataContext="{StaticResource ViewModel}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <ItemsControl Grid.Row="0"
-                          ItemsSource="{Binding SelectedElement.Elements}"
-                          x:Name="ElementsControl">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <Button Margin="5 5 0 0"
-                                    Height="25"
-                                    Content="{Binding Type}"
-                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
-                                    CommandParameter="{Binding}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <Button Grid.Row="1"
-                    Margin="5 0 0 5"
-                    Content="{Binding SelectedElement.ParentElement.Type}"
-                    Command="{Binding SelectElementCommand}"
-                    CommandParameter="{Binding SelectedElement.ParentElement}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0"
+                  Margin="5 0 0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <ItemsControl Grid.Row="0"
+                              ItemsSource="{Binding SelectedElement.Elements}"
+                              x:Name="ElementsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Button Margin="0 5 0 0"
+                                        Height="30"
+                                        FontFamily="Consolas"
+                                        FontSize="15"
+                                        Content="{Binding Type}"
+                                        Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
+                                        CommandParameter="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Grid.Row="1"
+                        FontFamily="Consolas"
+                        FontSize="15"
+                        Content="{Binding SelectedElement.ParentElement.Type}"
+                        Command="{Binding SelectElementCommand}"
+                        CommandParameter="{Binding SelectedElement.ParentElement}" />
+            </Grid>
+            <Grid Grid.Column="1"
+                  Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Margin="0 0 0 5"
+                           FontFamily="Consolas"
+                           FontSize="15"
+                           Foreground="#FFF"
+                           Background="#373737"
+                           Text="{Binding Document}" />
+                <Button Grid.Row="1"
+                        FontFamily="Consolas"
+                        FontSize="15"
+                        Content="Open"
+                        Command="{Binding OpenCommand}" />
+            </Grid>
         </Grid>
-        <Grid Grid.Column="1"
-              Margin="5">
+        <Grid Grid.Row="1"
+              Margin="5 0 5 5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0"
-                       FontFamily="Consolas"
-                       FontSize="15"
-                       Foreground="#FFF"
-                       Background="#696969"
-                       Text="{Binding Document}" />
-            <Button Grid.Row="1"
+            <TextBox Grid.Row="0"
+                     Height="30"
+                     VerticalContentAlignment="Center"
+                     FontFamily="Consolas"
+                     FontSize="15"
+                     Text="{Binding Type, Mode=TwoWay}" />
+            <TextBox Grid.Row="1"
+                     Margin="0 5 0 0"
+                     Height="30"
+                     VerticalContentAlignment="Center"
+                     FontFamily="Consolas"
+                     FontSize="15"
+                     Text="{Binding InnerHTML, Mode=TwoWay}" />
+            <Button Grid.Row="2"
                     Margin="0 5 0 0"
-                    Content="Open"
-                    Command="{Binding OpenCommand}" />
+                    Height="30"
+                    FontFamily="Consolas"
+                    FontSize="15"
+                    Content="Append"
+                    Command="{Binding AppendElementCommand}" />
         </Grid>
     </Grid>
 </UserControl>

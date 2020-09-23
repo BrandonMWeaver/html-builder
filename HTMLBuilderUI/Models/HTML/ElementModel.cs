@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HTMLBuilderUI.Models.Parents;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HTMLBuilderUI.HTML.Models
 {
-    class ElementModel
+    class ElementModel : NotificationBase
     {
         public int Depth { get; set; }
         public string Indentation { get; set; }
@@ -17,7 +18,17 @@ namespace HTMLBuilderUI.HTML.Models
         public string InnerHTML { get; set; }
         public List<string> Fields { get; set; }
 
-        public List<ElementModel> Elements { get; set; }
+        private ObservableCollection<ElementModel> _elements;
+
+        public ObservableCollection<ElementModel> Elements
+        {
+            get { return this._elements; }
+            set
+            {
+                this._elements = value;
+                this.OnPropertyChanged(nameof(this.Elements));
+            }
+        }
 
         public ElementModel(string type, string innerHTML = "")
         {
@@ -25,7 +36,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.Type = type;
             this.InnerHTML = innerHTML;
             this.Fields = new List<string>();
-            this.Elements = new List<ElementModel>();
+            this.Elements = new ObservableCollection<ElementModel>();
         }
 
         public ElementModel(string type, List<string> fields, string innerHTML = "")
@@ -34,7 +45,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.Type = type;
             this.InnerHTML = innerHTML;
             this.Fields = fields;
-            this.Elements = new List<ElementModel>();
+            this.Elements = new ObservableCollection<ElementModel>();
         }
 
         public void Append(ElementModel element)

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HTMLBuilderUI.ViewModels.Parents
+namespace HTMLBuilderUI.Models.Parents
 {
     class NotificationBase : INotifyPropertyChanged
     {

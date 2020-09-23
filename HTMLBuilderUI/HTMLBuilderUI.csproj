@@ -58,7 +58,7 @@
     <Compile Include="ViewModels\Commands\Command.cs" />
     <Compile Include="ViewModels\Commands\Parents\CommandBase.cs" />
     <Compile Include="ViewModels\Commands\ParameterlessCommand.cs" />
-    <Compile Include="ViewModels\Parents\NotificationBase.cs" />
+    <Compile Include="Models\Parents\NotificationBase.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="Views\TemplateView.xaml.cs">
       <DependentUpon>TemplateView.xaml</DependentUpon>
