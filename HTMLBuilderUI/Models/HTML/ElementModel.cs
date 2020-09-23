@@ -10,6 +10,7 @@ namespace HTMLBuilderUI.HTML.Models
     {
         public int Depth { get; set; }
         public string Indentation { get; set; }
+        public ElementModel ParentElement { get; set; }
 
         public string Type { get; set; }
         public string InnerHTML { get; set; }
@@ -42,6 +43,7 @@ namespace HTMLBuilderUI.HTML.Models
             {
                 element.Indentation = $"{element.Indentation}\t";
             }
+            element.ParentElement = this;
             this.Elements.Add(element);
         }
 
@@ -58,7 +60,7 @@ namespace HTMLBuilderUI.HTML.Models
                 elementFields = $" {elementFields}{field}";
             }
             if (this.InnerHTML != string.Empty && children != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{this.Indentation}\t{children}\n{this.Indentation}</{Type}>";
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}{this.Indentation}\t{children}\n{this.Indentation}</{Type}>";
             else if (this.InnerHTML != string.Empty)
                 return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{this.Indentation}</{Type}>";
             else if (children != string.Empty)

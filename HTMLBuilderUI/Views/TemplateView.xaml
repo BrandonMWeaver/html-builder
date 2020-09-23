@@ -10,12 +10,72 @@
     <UserControl.Resources>
         <vm:TemplateViewModel x:Key="ViewModel" />
     </UserControl.Resources>
-    <Grid DataContext="{StaticResource ViewModel}">
+    <Grid DataContext="{StaticResource ViewModel}"
+          Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Binding TemplateModel}" />
-        <Button Grid.Row="1" Command="{Binding OpenCommand}" Content="Open" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="0"
+                  Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0"
+                         Margin="0 0 5 0"
+                         VerticalContentAlignment="Center"
+                         FontFamily="Consolas"
+                         FontSize="15" />
+                <ItemsControl Grid.Row="1"
+                              x:Name="ElementsControl"
+                              ItemsSource="{Binding SelectedElement.Elements}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Button Margin="0 5 5 0"
+                                        Height="30"
+                                        Content="{Binding Type}"
+                                        Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
+                                        CommandParameter="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Grid.Row="2"
+                        Margin="0 0 5 0"
+                        Height="30"
+                        Content="{Binding SelectedElement.ParentElement.Type}"
+                        Command="{Binding SelectElementCommand}"
+                        CommandParameter="{Binding SelectedElement.ParentElement}" />
+            </Grid>
+            <ScrollViewer Grid.Column="1"
+                          HorizontalScrollBarVisibility="Visible">
+                <TextBlock FontFamily="Consolas"
+                           FontSize="15"
+                           Text="{Binding TemplateModel}"
+                           Foreground="#FFF"
+                           Background="#373737" />
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Margin="0 5 5 0"
+                    Content="Append" />
+            <Button Grid.Column="1"
+                    Margin="0 5 0 0"
+                    Content="Open"
+                    Command="{Binding OpenCommand}" />
+        </Grid>
     </Grid>
 </UserControl>
