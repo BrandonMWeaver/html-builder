@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,24 +50,17 @@ namespace HTMLBuilderUI.HTML.Models
 
         public override string ToString()
         {
-            string children = "";
+            string elementChildren = "";
             foreach(ElementModel element in this.Elements)
             {
-                children = $"{children}{element}";
+                elementChildren = $"{elementChildren}{element}";
             }
             string elementFields = "";
             foreach (string field in this.Fields)
             {
                 elementFields = $" {elementFields}{field}";
             }
-            if (this.InnerHTML != string.Empty && children != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}{this.Indentation}\t{children}\n{this.Indentation}</{Type}>";
-            else if (this.InnerHTML != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{this.Indentation}</{Type}>";
-            else if (children != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>{children}\n{this.Indentation}</{Type}>";
-            else
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}</{Type}>";
+            return $"<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
         }
     }
 }
