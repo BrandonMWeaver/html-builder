@@ -8,6 +8,6 @@
         mc:Ignorable="d"
         Title="HTML Builder" Height="450" Width="800" Background="#9B9B9B">
     <Grid>
-        <v:TemplateView />
+        <v:DocumentView />
     </Grid>
 </Window>

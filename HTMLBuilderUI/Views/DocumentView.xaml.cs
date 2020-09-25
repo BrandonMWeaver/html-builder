@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace HTMLBuilderUI.Views
 {
     /// <summary>
-    /// Interaction logic for TemplateView.xaml
+    /// Interaction logic for DocumentView.xaml
     /// </summary>
-    public partial class TemplateView : UserControl
+    public partial class DocumentView : UserControl
     {
-        public TemplateView()
+        public DocumentView()
         {
             InitializeComponent();
         }

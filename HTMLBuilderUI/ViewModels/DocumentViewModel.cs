@@ -62,6 +62,18 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private string _fields;
+
+        public string Fields
+        {
+            get { return this._fields; }
+            set
+            {
+                this._fields = value;
+                this.OnPropertyChanged(nameof(this.Fields));
+            }
+        }
+
         private string _innerHTML;
 
         public string InnerHTML
@@ -103,6 +115,10 @@ namespace HTMLBuilderUI.ViewModels
                 html = $"{html}{element}";
             }
             this.Document = $"<!DOCTYPE html>{html}";
+
+            this.Type = string.Empty;
+            this.Fields = string.Empty;
+            this.InnerHTML = string.Empty;
         }
 
         public void Open()
@@ -121,8 +137,12 @@ namespace HTMLBuilderUI.ViewModels
 
         public void AppendElement()
         {
-            this.SelectedElement.Append(new ElementModel(this.Type, this.InnerHTML));
+            if (this.Fields != string.Empty)
+                this.SelectedElement.Append(new ElementModel(this.Type, new List<string>(this.Fields.Split(',')), this.InnerHTML));
+            else
+                this.SelectedElement.Append(new ElementModel(this.Type, this.InnerHTML));
             this.Type = string.Empty;
+            this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
 
             string html = string.Empty;

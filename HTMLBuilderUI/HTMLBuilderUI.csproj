@@ -60,8 +60,8 @@
     <Compile Include="ViewModels\Commands\ParameterlessCommand.cs" />
     <Compile Include="Models\Parents\NotificationBase.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
-    <Compile Include="Views\TemplateView.xaml.cs">
-      <DependentUpon>TemplateView.xaml</DependentUpon>
+    <Compile Include="Views\DocumentView.xaml.cs">
+      <DependentUpon>DocumentView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -75,7 +75,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\TemplateView.xaml">
+    <Page Include="Views\DocumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
