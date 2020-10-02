@@ -88,6 +88,7 @@ namespace HTMLBuilderUI.ViewModels
 
         public ParameterlessCommand OpenCommand { get; set; }
         public ParameterlessCommand AppendElementCommand { get; set; }
+        public ParameterlessCommand BuildDocumentCommand { get; set; }
 
         public Command<ElementModel> SelectElementCommand { get; set; }
         public Command<ElementModel> SwapElementsUpCommand { get; set; }
@@ -108,6 +109,7 @@ namespace HTMLBuilderUI.ViewModels
 
             this.OpenCommand = new ParameterlessCommand(this.Open);
             this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
+            this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
 
             this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
             this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
