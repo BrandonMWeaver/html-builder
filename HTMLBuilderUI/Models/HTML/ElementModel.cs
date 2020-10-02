@@ -71,7 +71,14 @@ namespace HTMLBuilderUI.HTML.Models
             {
                 elementFields = $" {elementFields}{field}";
             }
-            return $"<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
+            if (this.InnerHTML != string.Empty && elementChildren != string.Empty)
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{elementChildren}\n{this.Indentation}</{this.Type}>";
+            else if (this.InnerHTML != string.Empty)
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}</{this.Type}>";
+            else if (elementChildren != string.Empty)
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>{elementChildren}\n{this.Indentation}</{this.Type}>";
+            else
+                return $"\n{this.Indentation}<{this.Type}{elementFields}></{this.Type}>";
         }
     }
 }
