@@ -42,7 +42,7 @@
                      VerticalContentAlignment="Center"
                      FontFamily="Consolas"
                      FontSize="15"
-                     Text="{Binding SelectedElement.Fields}" />
+                     Text="{Binding SelectedElementFieldsString}" />
             <TextBox Grid.Row="3"
                      Margin="0 5 0 0"
                      VerticalContentAlignment="Center"

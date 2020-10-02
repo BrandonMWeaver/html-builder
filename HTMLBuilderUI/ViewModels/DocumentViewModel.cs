@@ -50,6 +50,18 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private string _selectedElementFieldsString;
+
+        public string SelectedElementFieldsString
+        {
+            get { return this._selectedElementFieldsString; }
+            set
+            {
+                this._selectedElementFieldsString = value;
+                this.OnPropertyChanged(nameof(this.SelectedElementFieldsString));
+            }
+        }
+
         private string _type;
 
         public string Type
@@ -122,6 +134,7 @@ namespace HTMLBuilderUI.ViewModels
             }
             this.Document = $"<!DOCTYPE html>{html}";
 
+            this.SelectedElementFieldsString = string.Empty;
             this.Type = string.Empty;
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
@@ -139,10 +152,15 @@ namespace HTMLBuilderUI.ViewModels
         public void SelectElement(ElementModel element)
         {
             this.SelectedElement = element;
+            this.SelectedElementFieldsString = string.Join(", ", this.SelectedElement.Fields);
         }
 
         public void BuildDocument()
         {
+            if (this.SelectedElementFieldsString != string.Empty)
+            {
+                this.SelectedElement.Fields = new List<string>(this.SelectedElementFieldsString.Split(','));
+            }
             string html = string.Empty;
             foreach (ElementModel element in this.Elements)
             {
