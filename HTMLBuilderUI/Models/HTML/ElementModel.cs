@@ -62,7 +62,7 @@ namespace HTMLBuilderUI.HTML.Models
         public override string ToString()
         {
             string elementChildren = "";
-            foreach(ElementModel element in this.Elements)
+            foreach (ElementModel element in this.Elements)
             {
                 elementChildren = $"{elementChildren}{element}";
             }
