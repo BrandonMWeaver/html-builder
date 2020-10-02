@@ -90,6 +90,8 @@ namespace HTMLBuilderUI.ViewModels
         public ParameterlessCommand AppendElementCommand { get; set; }
 
         public Command<ElementModel> SelectElementCommand { get; set; }
+        public Command<ElementModel> SwapElementsUpCommand { get; set; }
+        public Command<ElementModel> SwapElementsDownCommand { get; set; }
 
         public DocumentViewModel()
         {
@@ -108,6 +110,8 @@ namespace HTMLBuilderUI.ViewModels
             this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
 
             this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
+            this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
+            this.SwapElementsDownCommand = new Command<ElementModel>(this.SwapElementsDown);
 
             string html = string.Empty;
             foreach (ElementModel element in this.Elements)
@@ -135,6 +139,16 @@ namespace HTMLBuilderUI.ViewModels
             this.SelectedElement = element;
         }
 
+        public void BuildDocument()
+        {
+            string html = string.Empty;
+            foreach (ElementModel element in this.Elements)
+            {
+                html = $"{html}{element}";
+            }
+            this.Document = $"<!DOCTYPE html>{html}";
+        }
+
         public void AppendElement()
         {
             if (this.Fields != string.Empty)
@@ -145,12 +159,33 @@ namespace HTMLBuilderUI.ViewModels
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
 
-            string html = string.Empty;
-            foreach (ElementModel element in this.Elements)
+            this.BuildDocument();
+        }
+
+        public void SwapElementsUp(ElementModel element)
+        {
+            int index1 = this.SelectedElement.Elements.IndexOf(element);
+            int index2 = index1 - 1;
+            if (index2 >= 0)
             {
-                html = $"{html}{element}";
+                ElementModel tempElement = this.SelectedElement.Elements[index2];
+                this.SelectedElement.Elements[index2] = element;
+                this.SelectedElement.Elements[index1] = tempElement;
             }
-            this.Document = $"<!DOCTYPE html>{html}";
+            this.BuildDocument();
+        }
+
+        public void SwapElementsDown(ElementModel element)
+        {
+            int index1 = this.SelectedElement.Elements.IndexOf(element);
+            int index2 = index1 + 1;
+            if (index2 < this.SelectedElement.Elements.Count)
+            {
+                ElementModel tempElement = this.SelectedElement.Elements[index2];
+                this.SelectedElement.Elements[index2] = element;
+                this.SelectedElement.Elements[index1] = tempElement;
+            }
+            this.BuildDocument();
         }
     }
 }
