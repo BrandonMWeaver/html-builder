@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HTMLBuilderUI.ViewModels.Commands.Template
+namespace HTMLBuilderUI.ViewModels.Commands
 {
     class ParameterlessCommand : CommandBase
     {

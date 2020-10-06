@@ -1,7 +1,6 @@
 ﻿using HTMLBuilderUI.HTML.Models;
 using HTMLBuilderUI.Models.Parents;
 using HTMLBuilderUI.ViewModels.Commands;
-using HTMLBuilderUI.ViewModels.Commands.Template;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
