@@ -15,185 +15,209 @@
         </Style>
     </UserControl.Resources>
     <Grid DataContext="{StaticResource ViewModel}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="300" />
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0"
-              Margin="5 0 5 5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <ItemsControl Grid.Row="0"
-                          ItemsSource="{Binding SelectedElement.Elements}"
-                          x:Name="ElementsControl">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <Grid Margin="0 5 0 0"
-                                  Height="30">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Button Grid.Row="0"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+            <Menu DockPanel.Dock="Top"
+                  FontFamily="Consolas"
+                  Background="#373769">
+                <MenuItem Header="_File"
+                          Foreground="#FFF">
+                    <MenuItem Header="New"
+                              Command="{Binding NewCommand}"
+                              Foreground="#050505" />
+                    <MenuItem Header="Save"
+                              Command="{Binding SaveCommand}"
+                              Foreground="#050505" />
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0"
+                  Margin="5 0 5 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ItemsControl Grid.Row="0"
+                              ItemsSource="{Binding SelectedElement.Elements}"
+                              x:Name="ElementsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <Grid Margin="0 5 0 0"
+                                      Height="30">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Button Grid.Row="0"
+                                                FontFamily="Consolas"
+                                                Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsUpCommand}"
+                                                CommandParameter="{Binding}"
+                                                Background="#373769" />
+                                        <Button Grid.Row="1"
+                                                FontFamily="Consolas"
+                                                Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsDownCommand}"
+                                                CommandParameter="{Binding}"
+                                                Background="#373769" />
+                                    </Grid>
+                                    <Button Grid.Column="1"
                                             FontFamily="Consolas"
-                                            Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsUpCommand}"
+                                            Content="{Binding Type}"
+                                            Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
                                             CommandParameter="{Binding}"
-                                            Background="#373769" />
-                                    <Button Grid.Row="1"
-                                            FontFamily="Consolas"
-                                            Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsDownCommand}"
-                                            CommandParameter="{Binding}"
+                                            Foreground="#FF9B05"
                                             Background="#373769" />
                                 </Grid>
-                                <Button Grid.Column="1"
-                                        FontFamily="Consolas"
-                                        Content="{Binding Type}"
-                                        Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
-                                        CommandParameter="{Binding}"
-                                        Foreground="#FF9B05"
-                                        Background="#373769" />
-                            </Grid>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <Button Grid.Row="1"
-                    VerticalAlignment="Bottom"
-                    Height="25"
-                    FontFamily="Consolas"
-                    Content="{Binding SelectedElement.ParentElement.Type}"
-                    Command="{Binding SelectElementCommand}"
-                    CommandParameter="{Binding SelectedElement.ParentElement}"
-                    Foreground="#FF9B05"
-                    Background="#373769" />
-        </Grid>
-        <Grid Grid.Column="1"
-              Margin="0 5 0 5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <ScrollViewer Grid.Row="0"
-                          HorizontalScrollBarVisibility="Visible"
-                          Background="#373769">
-                <TextBlock FontFamily="Consolas"
-                           Text="{Binding Document}"
-                           Foreground="#FF9B05" />
-            </ScrollViewer>
-            <Button Grid.Row="1"
-                    Margin="0 5 0 0"
-                    FontFamily="Consolas"
-                    Content="Open"
-                    Command="{Binding OpenCommand}"
-                    Foreground="#FFF"
-                    Background="#373769" />
-        </Grid>
-        <Grid Grid.Column="2"
-              Margin="5 0 5 5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0"
-                  Margin="0 5 0 0"
-                  Background="#373769">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="35" />
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontFamily="Consolas"
-                       Content="{Binding SelectedElement.Type}"
-                       Foreground="#FF9B05" />
-                <TextBox Grid.Row="1"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Center"
-                         FontFamily="Consolas"
-                         Text="{Binding SelectedElement.Type, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <TextBox Grid.Row="2"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Top"
-                         TextWrapping="Wrap"
-                         FontFamily="Consolas"
-                         Text="{Binding SelectedElementFieldsString, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <TextBox Grid.Row="3"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Center"
-                         FontFamily="Consolas"
-                         Text="{Binding SelectedElement.InnerHTML, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <Button Grid.Row="4"
-                        Margin="5"
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Grid.Row="1"
+                        VerticalAlignment="Bottom"
+                        Height="25"
                         FontFamily="Consolas"
-                        Content="Update"
-                        Command="{Binding BuildDocumentCommand}"
-                        Foreground="#FFF"
-                        Background="#6969CD" />
+                        Content="{Binding SelectedElement.ParentElement.Type}"
+                        Command="{Binding SelectElementCommand}"
+                        CommandParameter="{Binding SelectedElement.ParentElement}"
+                        Foreground="#FF9B05"
+                        Background="#373769" />
             </Grid>
-            <Grid Grid.Row="1"
-                  Margin="0 5 0 0"
-                  Background="#373769">
+            <Grid Grid.Column="1"
+                  Margin="0 5 0 5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="30" />
-                    <RowDefinition Height="35" />
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       FontFamily="Consolas"
-                       Content="New"
-                       Foreground="#FF9B05" />
-                <TextBox Grid.Row="1"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Center"
-                         FontFamily="Consolas"
-                         Text="{Binding Type, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <TextBox Grid.Row="2"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Top"
-                         TextWrapping="Wrap"
-                         FontFamily="Consolas"
-                         Text="{Binding Fields, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <TextBox Grid.Row="3"
-                         Margin="5 5 5 0"
-                         VerticalContentAlignment="Center"
-                         FontFamily="Consolas"
-                         Text="{Binding InnerHTML, Mode=TwoWay}"
-                         Foreground="#FFF"
-                         Background="#373769" />
-                <Button Grid.Row="4"
-                        Margin="5"
+                <ScrollViewer Grid.Row="0"
+                              HorizontalScrollBarVisibility="Visible"
+                              Background="#373769">
+                    <TextBlock FontFamily="Consolas"
+                               Text="{Binding Document}"
+                               Foreground="#FF9B05" />
+                </ScrollViewer>
+                <Button Grid.Row="1"
+                        Margin="0 5 0 0"
+                        IsEnabled="{Binding OpenAvailable}"
                         FontFamily="Consolas"
-                        Content="Append"
-                        Command="{Binding AppendElementCommand}"
+                        Content="Open"
+                        Command="{Binding OpenCommand}"
                         Foreground="#FFF"
-                        Background="#6969CD" />
+                        Background="#373769" />
+            </Grid>
+            <Grid Grid.Column="2"
+                  Margin="5 0 5 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0"
+                      Margin="0 5 0 0"
+                      Background="#373769">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="35" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontFamily="Consolas"
+                           Content="{Binding SelectedElement.Type}"
+                           Foreground="#FF9B05" />
+                    <TextBox Grid.Row="1"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Center"
+                             FontFamily="Consolas"
+                             Text="{Binding SelectedElement.Type, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <TextBox Grid.Row="2"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Top"
+                             TextWrapping="WrapWithOverflow"
+                             FontFamily="Consolas"
+                             Text="{Binding SelectedElementFieldsString, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <TextBox Grid.Row="3"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Top"
+                             TextWrapping="WrapWithOverflow"
+                             FontFamily="Consolas"
+                             Text="{Binding SelectedElement.InnerHTML, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <Button Grid.Row="4"
+                            Margin="5"
+                            FontFamily="Consolas"
+                            Content="Update"
+                            Command="{Binding BuildDocumentCommand}"
+                            Foreground="#FFF"
+                            Background="#6969CD" />
+                </Grid>
+                <Grid Grid.Row="1"
+                      Margin="0 5 0 0"
+                      Background="#373769">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="35" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontFamily="Consolas"
+                           Content="New"
+                           Foreground="#FF9B05" />
+                    <TextBox Grid.Row="1"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Center"
+                             FontFamily="Consolas"
+                             Text="{Binding Type, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <TextBox Grid.Row="2"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Top"
+                             TextWrapping="WrapWithOverflow"
+                             FontFamily="Consolas"
+                             Text="{Binding Fields, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <TextBox Grid.Row="3"
+                             Margin="5 5 5 0"
+                             VerticalContentAlignment="Top"
+                             TextWrapping="WrapWithOverflow"
+                             FontFamily="Consolas"
+                             Text="{Binding InnerHTML, Mode=TwoWay}"
+                             Foreground="#FFF"
+                             Background="#373769" />
+                    <Button Grid.Row="4"
+                            Margin="5"
+                            FontFamily="Consolas"
+                            Content="Append"
+                            Command="{Binding AppendElementCommand}"
+                            Foreground="#FFF"
+                            Background="#6969CD" />
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

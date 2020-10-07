@@ -1,6 +1,7 @@
 ﻿using HTMLBuilderUI.HTML.Models;
 using HTMLBuilderUI.Models.Parents;
 using HTMLBuilderUI.ViewModels.Commands;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -97,7 +98,23 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private bool _openAvailable;
+
+        public bool OpenAvailable
+        {
+            get { return this._openAvailable; }
+            set
+            {
+                this._openAvailable = value;
+                this.OnPropertyChanged(nameof(this.OpenAvailable));
+            }
+        }
+
+        public string FilePath { get; set; }
+
+        public ParameterlessCommand NewCommand { get; set; }
         public ParameterlessCommand OpenCommand { get; set; }
+        public ParameterlessCommand SaveCommand { get; set; }
         public ParameterlessCommand AppendElementCommand { get; set; }
         public ParameterlessCommand BuildDocumentCommand { get; set; }
 
@@ -106,6 +123,23 @@ namespace HTMLBuilderUI.ViewModels
         public Command<ElementModel> SwapElementsDownCommand { get; set; }
 
         public DocumentViewModel()
+        {
+            this.NewCommand = new ParameterlessCommand(this.New);
+            this.OpenCommand = new ParameterlessCommand(this.Open);
+            this.SaveCommand = new ParameterlessCommand(this.Save);
+            this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
+            this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
+
+            this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
+            this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
+            this.SwapElementsDownCommand = new Command<ElementModel>(this.SwapElementsDown);
+
+            this.FilePath = string.Empty;
+
+            this.New();
+        }
+
+        public void New()
         {
             this.Elements = new ObservableCollection<ElementModel>()
             {
@@ -117,14 +151,6 @@ namespace HTMLBuilderUI.ViewModels
             // Temporary
             this.SelectedElement.Append(new ElementModel("head"));
             this.SelectedElement.Elements[0].Append(new ElementModel("title", "Test"));
-
-            this.OpenCommand = new ParameterlessCommand(this.Open);
-            this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
-            this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
-
-            this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
-            this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
-            this.SwapElementsDownCommand = new Command<ElementModel>(this.SwapElementsDown);
 
             string html = string.Empty;
             foreach (ElementModel element in this.Elements)
@@ -141,11 +167,30 @@ namespace HTMLBuilderUI.ViewModels
 
         public void Open()
         {
-            using (StreamWriter sw = new StreamWriter("../../Storage/test.html"))
+            this.Save();
+            if (this.FilePath != string.Empty)
+                System.Diagnostics.Process.Start(this.FilePath);
+        }
+
+        public void Save()
+        {
+            if (this.FilePath != string.Empty)
             {
-                sw.Write(this.Document);
+                File.WriteAllText(this.FilePath, this.Document);
             }
-            System.Diagnostics.Process.Start("C:\\Users\\a7xnc\\source\\repos\\HTMLBuilder\\HTMLBuilderUI\\Storage\\test.html");
+            else
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "HTML Files|*.html"
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    this.FilePath = saveFileDialog.FileName;
+                    File.WriteAllText(saveFileDialog.FileName, this.Document);
+                    this.OpenAvailable = true;
+                }
+            }
         }
 
         public void SelectElement(ElementModel element)
