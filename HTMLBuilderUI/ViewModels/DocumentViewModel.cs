@@ -160,6 +160,9 @@ namespace HTMLBuilderUI.ViewModels
             {
                 this.SelectedElement.Fields = new List<string>(this.SelectedElementFieldsString.Split(','));
             }
+            else
+                this.SelectedElement.Fields = new List<string>();
+
             string html = string.Empty;
             foreach (ElementModel element in this.Elements)
             {
