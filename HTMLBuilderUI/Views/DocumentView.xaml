@@ -163,13 +163,27 @@
                              Text="{Binding SelectedElement.InnerHTML, Mode=TwoWay}"
                              Foreground="#FFF"
                              Background="#373769" />
-                    <Button Grid.Row="4"
-                            Margin="5"
-                            FontFamily="Consolas"
-                            Content="Update"
-                            Command="{Binding BuildDocumentCommand}"
-                            Foreground="#FFF"
-                            Background="#6969CD" />
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Margin="5 5 2.5 5"
+                                FontFamily="Consolas"
+                                Content="Update"
+                                Command="{Binding BuildDocumentCommand}"
+                                Foreground="#FFF"
+                                Background="#6969CD" />
+                        <Button Grid.Column="1"
+                                Margin="5"
+                                IsEnabled="{Binding RemoveElementAvailable}"
+                                FontFamily="Consolas"
+                                Content="Remove"
+                                Command="{Binding RemoveElementCommand}"
+                                Foreground="#FFF"
+                                Background="#6969CD" />
+                    </Grid>
                 </Grid>
                 <Grid Grid.Row="1"
                       Margin="0 5 0 0"

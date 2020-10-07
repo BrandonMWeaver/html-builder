@@ -110,6 +110,18 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private bool _removeElementAvailable;
+
+        public bool RemoveElementAvailable
+        {
+            get { return this._removeElementAvailable; }
+            set
+            {
+                this._removeElementAvailable = value;
+                this.OnPropertyChanged(nameof(this.RemoveElementAvailable));
+            }
+        }
+
         public string FilePath { get; set; }
 
         public ParameterlessCommand NewCommand { get; set; }
@@ -117,6 +129,7 @@ namespace HTMLBuilderUI.ViewModels
         public ParameterlessCommand SaveCommand { get; set; }
         public ParameterlessCommand AppendElementCommand { get; set; }
         public ParameterlessCommand BuildDocumentCommand { get; set; }
+        public ParameterlessCommand RemoveElementCommand { get; set; }
 
         public Command<ElementModel> SelectElementCommand { get; set; }
         public Command<ElementModel> SwapElementsUpCommand { get; set; }
@@ -129,6 +142,7 @@ namespace HTMLBuilderUI.ViewModels
             this.SaveCommand = new ParameterlessCommand(this.Save);
             this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
             this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
+            this.RemoveElementCommand = new ParameterlessCommand(this.RemoveElement);
 
             this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
             this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
@@ -197,6 +211,11 @@ namespace HTMLBuilderUI.ViewModels
         {
             this.SelectedElement = element;
             this.SelectedElementFieldsString = string.Join(", ", this.SelectedElement.Fields);
+
+            if (this.SelectedElement != this.Elements[0])
+                this.RemoveElementAvailable = true;
+            else
+                this.RemoveElementAvailable = false;
         }
 
         public void BuildDocument()
@@ -225,6 +244,15 @@ namespace HTMLBuilderUI.ViewModels
             this.Type = string.Empty;
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
+
+            this.BuildDocument();
+        }
+
+        public void RemoveElement()
+        {
+            ElementModel tempElement = this.SelectedElement.ParentElement;
+            this.SelectedElement.ParentElement.Elements.Remove(this.SelectedElement);
+            this.SelectElement(tempElement);
 
             this.BuildDocument();
         }
