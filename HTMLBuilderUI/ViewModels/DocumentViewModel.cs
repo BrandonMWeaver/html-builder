@@ -186,6 +186,8 @@ namespace HTMLBuilderUI.ViewModels
         public Command<ElementModel> SelectElementCommand { get; set; }
         public Command<ElementModel> SwapElementsUpCommand { get; set; }
         public Command<ElementModel> SwapElementsDownCommand { get; set; }
+        public Command<ElementModel> InsertElementCommand { get; set; }
+        public Command<ElementModel> ExtractElementCommand { get; set; }
 
         public DocumentViewModel()
         {
@@ -199,6 +201,8 @@ namespace HTMLBuilderUI.ViewModels
             this.SelectElementCommand = new Command<ElementModel>(this.SelectElement);
             this.SwapElementsUpCommand = new Command<ElementModel>(this.SwapElementsUp);
             this.SwapElementsDownCommand = new Command<ElementModel>(this.SwapElementsDown);
+            this.InsertElementCommand = new Command<ElementModel>(this.InsertElement);
+            this.ExtractElementCommand = new Command<ElementModel>(this.ExtractElement);
 
             this.FilePath = string.Empty;
 
@@ -339,6 +343,30 @@ namespace HTMLBuilderUI.ViewModels
                 ElementModel tempElement = this.SelectedElement.Elements[index2];
                 this.SelectedElement.Elements[index2] = element;
                 this.SelectedElement.Elements[index1] = tempElement;
+            }
+            this.BuildDocument();
+        }
+
+        public void InsertElement(ElementModel element)
+        {
+            int index1 = this.SelectedElement.Elements.IndexOf(element);
+            int index2 = index1 + 1;
+            if (index2 < this.SelectedElement.Elements.Count)
+            {
+                this.SelectedElement.Elements[index2].Append(element);
+                this.SelectedElement.Elements.Remove(element);
+                this.SelectElement(this.SelectedElement.Elements[index1]);
+            }
+            this.BuildDocument();
+        }
+
+        public void ExtractElement(ElementModel element)
+        {
+            if (this.SelectedElement != this.Elements[0])
+            {
+                this.SelectedElement.ParentElement.Append(element);
+                this.SelectedElement.Elements.Remove(element);
+                this.SelectElement(this.SelectedElement.ParentElement);
             }
             this.BuildDocument();
         }

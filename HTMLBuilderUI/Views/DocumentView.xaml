@@ -70,23 +70,23 @@
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <Button Grid.Row="0"
-                                                    FontFamily="Consolas"
-                                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsUpCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    Background="#373769" />
+                                                        FontFamily="Consolas"
+                                                        Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsUpCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="#373769" />
                                                 <Button Grid.Row="1"
-                                                    FontFamily="Consolas"
-                                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsDownCommand}"
-                                                    CommandParameter="{Binding}"
-                                                    Background="#373769" />
+                                                        FontFamily="Consolas"
+                                                        Command="{Binding ElementName=ElementsControl, Path=DataContext.SwapElementsDownCommand}"
+                                                        CommandParameter="{Binding}"
+                                                        Background="#373769" />
                                             </Grid>
                                             <Button Grid.Column="1"
-                                                FontFamily="Consolas"
-                                                Content="{Binding Type}"
-                                                Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
-                                                CommandParameter="{Binding}"
-                                                Foreground="#FF9B05"
-                                                Background="#373769" />
+                                                    FontFamily="Consolas"
+                                                    Content="{Binding Type}"
+                                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.SelectElementCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="#FF9B05"
+                                                    Background="#373769" />
                                         </Grid>
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
@@ -94,15 +94,19 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Button Grid.Column="0"
-                                                FontFamily="Consolas"
-                                                Content="-"
-                                                Foreground="#FFF"
-                                                Background="#373769" />
+                                                    FontFamily="Consolas"
+                                                    Content="-"
+                                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.ExtractElementCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="#FFF"
+                                                    Background="#373769" />
                                             <Button Grid.Column="1"
-                                                FontFamily="Consolas"
-                                                Content="+"
-                                                Foreground="#FFF"
-                                                Background="#373769" />
+                                                    FontFamily="Consolas"
+                                                    Content="+"
+                                                    Command="{Binding ElementName=ElementsControl, Path=DataContext.InsertElementCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="#FFF"
+                                                    Background="#373769" />
                                         </Grid>
                                     </Grid>
                                 </StackPanel>

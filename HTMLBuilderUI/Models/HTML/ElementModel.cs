@@ -51,9 +51,15 @@ namespace HTMLBuilderUI.HTML.Models
         public void Append(ElementModel element)
         {
             element.Depth = this.Depth + 1;
+            element.Indentation = "";
             for (int i = 0; i < element.Depth; i++)
             {
                 element.Indentation = $"{element.Indentation}\t";
+            }
+            foreach (ElementModel e in element.Elements)
+            {
+                e.Depth = element.Depth + 1;
+                e.Indentation = $"{element.Indentation}\t";
             }
             element.ParentElement = this;
             this.Elements.Add(element);
