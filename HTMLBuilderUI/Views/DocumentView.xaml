@@ -31,6 +31,9 @@
                     <MenuItem Header="Save"
                               Command="{Binding SaveCommand}"
                               Foreground="#050505" />
+                    <MenuItem Header="Save As"
+                              Command="{Binding SaveAsCommand}"
+                              Foreground="#050505" />
                 </MenuItem>
             </Menu>
         </DockPanel>

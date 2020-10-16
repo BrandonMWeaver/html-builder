@@ -179,6 +179,7 @@ namespace HTMLBuilderUI.ViewModels
         public ParameterlessCommand NewCommand { get; set; }
         public ParameterlessCommand OpenCommand { get; set; }
         public ParameterlessCommand SaveCommand { get; set; }
+        public ParameterlessCommand SaveAsCommand { get; set; }
         public ParameterlessCommand AppendElementCommand { get; set; }
         public ParameterlessCommand BuildDocumentCommand { get; set; }
         public ParameterlessCommand RemoveElementCommand { get; set; }
@@ -194,6 +195,7 @@ namespace HTMLBuilderUI.ViewModels
             this.NewCommand = new ParameterlessCommand(this.New);
             this.OpenCommand = new ParameterlessCommand(this.Open);
             this.SaveCommand = new ParameterlessCommand(this.Save);
+            this.SaveAsCommand = new ParameterlessCommand(this.SaveAs);
             this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
             this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
             this.RemoveElementCommand = new ParameterlessCommand(this.RemoveElement);
@@ -252,16 +254,21 @@ namespace HTMLBuilderUI.ViewModels
             }
             else
             {
-                SaveFileDialog saveFileDialog = new SaveFileDialog
-                {
-                    Filter = "HTML Files|*.html"
-                };
-                if (saveFileDialog.ShowDialog() == true)
-                {
-                    this.FilePath = saveFileDialog.FileName;
-                    File.WriteAllText(saveFileDialog.FileName, this.Document);
-                    this.OpenAvailable = true;
-                }
+                this.SaveAs();
+            }
+        }
+
+        public void SaveAs()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "HTML Files|*.html"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                this.FilePath = saveFileDialog.FileName;
+                File.WriteAllText(saveFileDialog.FileName, this.Document);
+                this.OpenAvailable = true;
             }
         }
 
