@@ -112,8 +112,10 @@
                 </ScrollViewer>
                 <Button Grid.Row="1"
                         VerticalAlignment="Bottom"
-                        Margin="0 10 0 0"
-                        Height="25"
+                        Margin="{Binding SelectElementButtonMargin}"
+                        Height="{Binding SelectElementButtonHeight}"
+                        Visibility="{Binding SelectElementButtonVisibility}"
+                        IsEnabled="{Binding SelectElementAvailable}"
                         FontFamily="Consolas"
                         Content="{Binding SelectedElement.ParentElement.Type}"
                         Command="{Binding SelectElementCommand}"

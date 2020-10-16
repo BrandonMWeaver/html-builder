@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace HTMLBuilderUI.ViewModels
 {
@@ -110,6 +111,57 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private Visibility _selectElementButtonVisibility;
+
+        public Visibility SelectElementButtonVisibility
+        {
+            get { return this._selectElementButtonVisibility; }
+            set
+            {
+                this._selectElementButtonVisibility = value;
+                this.OnPropertyChanged(nameof(this.SelectElementButtonVisibility));
+            }
+        }
+
+        private string _selectElementButtonMargin;
+
+        public string SelectElementButtonMargin
+        {
+            get { return this._selectElementButtonMargin; }
+            set
+            {
+                this._selectElementButtonMargin = value;
+                this.OnPropertyChanged(nameof(this.SelectElementButtonMargin));
+            }
+        }
+
+        private int _selectElementButtonHeight;
+
+        public int SelectElementButtonHeight
+        {
+            get { return this._selectElementButtonHeight; }
+            set
+            {
+                this._selectElementButtonHeight = value;
+                this.OnPropertyChanged(nameof(this.SelectElementButtonHeight));
+            }
+        }
+
+        private bool _selectElementAvailable;
+
+        public bool SelectElementAvailable
+        {
+            get { return this._selectElementAvailable; }
+            set
+            {
+                this._selectElementAvailable = value;
+                this.SelectElementButtonVisibility = value ? Visibility.Visible : Visibility.Hidden;
+                this.SelectElementButtonMargin = value ? "0,10,0,0" : "0,5,0,0";
+                this.SelectElementButtonHeight = value ? 25 : 0;
+                this.OnPropertyChanged(nameof(this.SelectElementAvailable));
+            }
+        }
+
         private bool _removeElementAvailable;
 
         public bool RemoveElementAvailable
@@ -177,6 +229,8 @@ namespace HTMLBuilderUI.ViewModels
             this.Type = string.Empty;
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
+
+            this.SelectElementAvailable = false;
         }
 
         public void Open()
@@ -213,9 +267,15 @@ namespace HTMLBuilderUI.ViewModels
             this.SelectedElementFieldsString = string.Join(", ", this.SelectedElement.Fields);
 
             if (this.SelectedElement != this.Elements[0])
+            {
                 this.RemoveElementAvailable = true;
+                this.SelectElementAvailable = true;
+            }
             else
+            {
                 this.RemoveElementAvailable = false;
+                this.SelectElementAvailable = false;
+            }
         }
 
         public void BuildDocument()
