@@ -99,15 +99,15 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
-        private bool _openAvailable;
+        private bool _openInBrowserAvailable;
 
-        public bool OpenAvailable
+        public bool OpenInBrowserAvailable
         {
-            get { return this._openAvailable; }
+            get { return this._openInBrowserAvailable; }
             set
             {
-                this._openAvailable = value;
-                this.OnPropertyChanged(nameof(this.OpenAvailable));
+                this._openInBrowserAvailable = value;
+                this.OnPropertyChanged(nameof(this.OpenInBrowserAvailable));
             }
         }
 
@@ -180,6 +180,7 @@ namespace HTMLBuilderUI.ViewModels
         public ParameterlessCommand OpenCommand { get; set; }
         public ParameterlessCommand SaveCommand { get; set; }
         public ParameterlessCommand SaveAsCommand { get; set; }
+        public ParameterlessCommand OpenInBrowserCommand { get; set; }
         public ParameterlessCommand AppendElementCommand { get; set; }
         public ParameterlessCommand BuildDocumentCommand { get; set; }
         public ParameterlessCommand RemoveElementCommand { get; set; }
@@ -196,6 +197,7 @@ namespace HTMLBuilderUI.ViewModels
             this.OpenCommand = new ParameterlessCommand(this.Open);
             this.SaveCommand = new ParameterlessCommand(this.Save);
             this.SaveAsCommand = new ParameterlessCommand(this.SaveAs);
+            this.OpenInBrowserCommand = new ParameterlessCommand(this.OpenInBrowser);
             this.AppendElementCommand = new ParameterlessCommand(this.AppendElement);
             this.BuildDocumentCommand = new ParameterlessCommand(this.BuildDocument);
             this.RemoveElementCommand = new ParameterlessCommand(this.RemoveElement);
@@ -241,9 +243,21 @@ namespace HTMLBuilderUI.ViewModels
 
         public void Open()
         {
-            this.Save();
-            if (this.FilePath != string.Empty)
-                System.Diagnostics.Process.Start(this.FilePath);
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "HTML Files|*.html"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                this.Elements = new ObservableCollection<ElementModel>();
+                using (StreamReader sr = new StreamReader(openFileDialog.FileName))
+                {
+                    // TODO: Parse HTML
+                    this.Document = sr.ReadToEnd();
+                }
+                this.FilePath = openFileDialog.FileName;
+                this.OpenInBrowserAvailable = true;
+            }
         }
 
         public void Save()
@@ -268,7 +282,7 @@ namespace HTMLBuilderUI.ViewModels
             {
                 this.FilePath = saveFileDialog.FileName;
                 File.WriteAllText(saveFileDialog.FileName, this.Document);
-                this.OpenAvailable = true;
+                this.OpenInBrowserAvailable = true;
             }
         }
 
@@ -304,6 +318,13 @@ namespace HTMLBuilderUI.ViewModels
                 html = $"{html}{element}";
             }
             this.Document = $"<!DOCTYPE html>{html}";
+        }
+
+        public void OpenInBrowser()
+        {
+            this.Save();
+            if (this.FilePath != string.Empty)
+                System.Diagnostics.Process.Start(this.FilePath);
         }
 
         public void AppendElement()
