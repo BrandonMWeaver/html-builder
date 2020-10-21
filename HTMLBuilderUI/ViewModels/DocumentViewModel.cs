@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -239,6 +240,8 @@ namespace HTMLBuilderUI.ViewModels
             this.InnerHTML = string.Empty;
 
             this.SelectElementAvailable = false;
+
+            this.FilePath = string.Empty;
         }
 
         public void Open()
@@ -249,12 +252,53 @@ namespace HTMLBuilderUI.ViewModels
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                this.Elements = new ObservableCollection<ElementModel>();
                 using (StreamReader sr = new StreamReader(openFileDialog.FileName))
                 {
-                    // TODO: Parse HTML
-                    this.Document = sr.ReadToEnd();
+                    string document = sr.ReadToEnd();
+                    Regex regex = new Regex(@"(\<(.*?)\>)(\w.+)?(?=<)|(\<(.*?)\>)");
+                    List<string> matches = new List<string>();
+                    foreach (Match match in regex.Matches(document))
+                    {
+                        if (match.ToString() != string.Empty && !match.ToString().Contains("!DOCTYPE"))
+                        {
+                            matches.Add(match.ToString());
+                        }
+                    }
+                    ElementModel currentElement = new ElementModel(matches[0].Split('<')[1].Split('>')[0]);
+                    currentElement.ParentElement = currentElement;
+                    matches.Remove(matches[0]);
+                    this.Elements = new ObservableCollection<ElementModel>()
+                    {
+                        currentElement
+                    };
+                    regex = new Regex(@"(\<[^\/](.*?)\>)([.]+)?");
+                    foreach (string match in matches)
+                    {
+                        if (regex.IsMatch(match))
+                        {
+                            foreach (string testString in match.Split('>'))
+                            {
+                                System.Diagnostics.Debug.WriteLine(testString);
+                            }
+                            string elementContent = match.Split('<')[1].Split('>')[0];
+                            string type;
+                            if (elementContent.Contains(' '))
+                            {
+                                type = elementContent.Split(' ')[0];
+                            }
+                            else
+                                type = elementContent;
+                            // TODO: Parse properties
+                            ElementModel nextElement = new ElementModel(type, match.Split('>')[1]);
+                            currentElement.Append(nextElement);
+                            currentElement = nextElement;
+                        }
+                        else
+                            currentElement = currentElement.ParentElement;
+                    }
                 }
+                this.SelectedElement = this.Elements[0];
+                this.BuildDocument();
                 this.FilePath = openFileDialog.FileName;
                 this.OpenInBrowserAvailable = true;
             }
