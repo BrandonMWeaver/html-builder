@@ -276,20 +276,21 @@ namespace HTMLBuilderUI.ViewModels
                     {
                         if (regex.IsMatch(match))
                         {
-                            foreach (string testString in match.Split('>'))
-                            {
-                                System.Diagnostics.Debug.WriteLine(testString);
-                            }
                             string elementContent = match.Split('<')[1].Split('>')[0];
                             string type;
+                            List<string> properties = new List<string>();
+                            Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
                             if (elementContent.Contains(' '))
                             {
                                 type = elementContent.Split(' ')[0];
+                                foreach (Match property in propertyRegex.Matches(elementContent))
+                                {
+                                    properties.Add(property.ToString());
+                                }
                             }
                             else
                                 type = elementContent;
-                            // TODO: Parse properties
-                            ElementModel nextElement = new ElementModel(type, match.Split('>')[1]);
+                            ElementModel nextElement = new ElementModel(type, properties, match.Split('>')[1]);
                             currentElement.Append(nextElement);
                             currentElement = nextElement;
                         }
@@ -333,7 +334,7 @@ namespace HTMLBuilderUI.ViewModels
         public void SelectElement(ElementModel element)
         {
             this.SelectedElement = element;
-            this.SelectedElementFieldsString = string.Join(", ", this.SelectedElement.Fields);
+            this.SelectedElementFieldsString = string.Join("\n", this.SelectedElement.Fields);
 
             if (this.SelectedElement != this.Elements[0])
             {
@@ -351,7 +352,13 @@ namespace HTMLBuilderUI.ViewModels
         {
             if (this.SelectedElementFieldsString != string.Empty)
             {
-                this.SelectedElement.Fields = new List<string>(this.SelectedElementFieldsString.Split(','));
+                Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
+                List<string> properties = new List<string>();
+                foreach (Match property in propertyRegex.Matches(this.SelectedElementFieldsString))
+                {
+                    properties.Add(property.ToString());
+                }
+                this.SelectedElement.Fields = new List<string>(properties);
             }
             else
                 this.SelectedElement.Fields = new List<string>();
@@ -374,7 +381,15 @@ namespace HTMLBuilderUI.ViewModels
         public void AppendElement()
         {
             if (this.Fields != string.Empty)
-                this.SelectedElement.Append(new ElementModel(this.Type, new List<string>(this.Fields.Split(',')), this.InnerHTML));
+            {
+                Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
+                List<string> properties = new List<string>();
+                foreach (Match property in propertyRegex.Matches(this.Fields))
+                {
+                    properties.Add(property.ToString());
+                }
+                this.SelectedElement.Append(new ElementModel(this.Type, properties, this.InnerHTML));
+            }
             else
                 this.SelectedElement.Append(new ElementModel(this.Type, this.InnerHTML));
             this.Type = string.Empty;

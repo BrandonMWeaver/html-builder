@@ -75,7 +75,7 @@ namespace HTMLBuilderUI.HTML.Models
             string elementFields = "";
             foreach (string field in this.Fields)
             {
-                elementFields = $" {elementFields}{field}";
+                elementFields = $"{elementFields} {field}";
             }
             if (this.InnerHTML != string.Empty && elementChildren != string.Empty)
                 return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{elementChildren}\n{this.Indentation}</{this.Type}>";
