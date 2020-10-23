@@ -1,6 +1,7 @@
 ﻿using HTMLBuilderUI.HTML.Models;
 using HTMLBuilderUI.Models.Parents;
 using HTMLBuilderUI.ViewModels.Commands;
+using HTMLBuilderUI.ViewModels.Helpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -252,52 +253,12 @@ namespace HTMLBuilderUI.ViewModels
             };
             if (openFileDialog.ShowDialog() == true)
             {
+                string document;
                 using (StreamReader sr = new StreamReader(openFileDialog.FileName))
                 {
-                    string document = sr.ReadToEnd();
-                    Regex regex = new Regex(@"(\<(.*?)\>)(\w.+)?(?=<)|(\<(.*?)\>)");
-                    List<string> matches = new List<string>();
-                    foreach (Match match in regex.Matches(document))
-                    {
-                        if (match.ToString() != string.Empty && !match.ToString().Contains("!DOCTYPE"))
-                        {
-                            matches.Add(match.ToString());
-                        }
-                    }
-                    ElementModel currentElement = new ElementModel(matches[0].Split('<')[1].Split('>')[0]);
-                    currentElement.ParentElement = currentElement;
-                    matches.Remove(matches[0]);
-                    this.Elements = new ObservableCollection<ElementModel>()
-                    {
-                        currentElement
-                    };
-                    regex = new Regex(@"(\<[^\/](.*?)\>)([.]+)?");
-                    foreach (string match in matches)
-                    {
-                        if (regex.IsMatch(match))
-                        {
-                            string elementContent = match.Split('<')[1].Split('>')[0];
-                            string type;
-                            List<string> properties = new List<string>();
-                            Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
-                            if (elementContent.Contains(' '))
-                            {
-                                type = elementContent.Split(' ')[0];
-                                foreach (Match property in propertyRegex.Matches(elementContent))
-                                {
-                                    properties.Add(property.ToString());
-                                }
-                            }
-                            else
-                                type = elementContent;
-                            ElementModel nextElement = new ElementModel(type, properties, match.Split('>')[1]);
-                            currentElement.Append(nextElement);
-                            currentElement = nextElement;
-                        }
-                        else
-                            currentElement = currentElement.ParentElement;
-                    }
+                    document = sr.ReadToEnd();
                 }
+                this.Elements = new ObservableCollection<ElementModel>(HTMLParser.Parse(document));
                 this.SelectedElement = this.Elements[0];
                 this.BuildDocument();
                 this.FilePath = openFileDialog.FileName;
