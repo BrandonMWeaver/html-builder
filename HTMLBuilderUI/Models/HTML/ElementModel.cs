@@ -18,6 +18,8 @@ namespace HTMLBuilderUI.HTML.Models
         public string InnerHTML { get; set; }
         public List<string> Fields { get; set; }
 
+        public bool IsSelfClosing { get; set; }
+
         private ObservableCollection<ElementModel> _elements;
 
         public ObservableCollection<ElementModel> Elements
@@ -37,6 +39,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = new List<string>();
             this.Elements = new ObservableCollection<ElementModel>();
+            this.IsSelfClosing = false;
         }
 
         public ElementModel(string type, List<string> fields, string innerHTML = "")
@@ -46,6 +49,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = fields;
             this.Elements = new ObservableCollection<ElementModel>();
+            this.IsSelfClosing = false;
         }
 
         public void Append(ElementModel element)
@@ -77,14 +81,24 @@ namespace HTMLBuilderUI.HTML.Models
             {
                 elementFields = $"{elementFields} {field}";
             }
-            if (this.InnerHTML != string.Empty && elementChildren != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>\n{this.Indentation}\t{this.InnerHTML}\n{elementChildren}\n{this.Indentation}</{this.Type}>";
-            else if (this.InnerHTML != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}</{this.Type}>";
-            else if (elementChildren != string.Empty)
-                return $"\n{this.Indentation}<{this.Type}{elementFields}>{elementChildren}\n{this.Indentation}</{this.Type}>";
+            if (this.IsSelfClosing)
+            {
+                if (this.InnerHTML != string.Empty)
+                    return $"<{this.Type}{elementFields} />{this.InnerHTML}";
+                else
+                    return $"\n{this.Indentation}<{this.Type}{elementFields} />";
+            }
             else
-                return $"\n{this.Indentation}<{this.Type}{elementFields}></{this.Type}>";
+            {
+                if (this.InnerHTML != string.Empty && elementChildren != string.Empty)
+                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
+                else if (this.InnerHTML != string.Empty)
+                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}</{this.Type}>";
+                else if (elementChildren != string.Empty)
+                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{elementChildren}\n{this.Indentation}</{this.Type}>";
+                else
+                    return $"\n{this.Indentation}<{this.Type}{elementFields}></{this.Type}>";
+            }
         }
     }
 }

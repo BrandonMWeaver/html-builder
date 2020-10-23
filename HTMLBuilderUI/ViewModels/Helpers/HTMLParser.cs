@@ -10,8 +10,8 @@ namespace HTMLBuilderUI.ViewModels.Helpers
 {
     static class HTMLParser
     {
-        private static readonly Regex elementOrderExpression = new Regex(@"(\<(.*?)\>)(\w.+)?(?=<)|(\<(.*?)\>)");
-        private static readonly Regex elementExpression = new Regex(@"(\<[^\/](.*?)\>)([.]+)?");
+        //private static readonly Regex elementOrderExpression = new Regex(@"(\<(.*?)\>)(\w.+)?(?=<)|(\<(.*?)\>)");
+        private static readonly Regex elementOrderExpression = new Regex(@"(<.+?>)([^<\n]?)+|(<.+?>)");
         private static readonly Regex elementTypeExpression = new Regex(@"(?<=<)\w+");
         private static readonly Regex elementPropertiesExpression = new Regex("\\w+=\".+?(?<=\")");
         private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\w\s.]+");
@@ -34,7 +34,7 @@ namespace HTMLBuilderUI.ViewModels.Helpers
 
             foreach (string selection in elementOrderTree)
             {
-                if (elementExpression.IsMatch(selection))
+                if (!selection.StartsWith("</"))
                 {
                     string type = elementTypeExpression.Match(selection).ToString();
                     List<string> properties = GetElementProperties(selection);
@@ -42,7 +42,12 @@ namespace HTMLBuilderUI.ViewModels.Helpers
 
                     ElementModel childElement = new ElementModel(type, properties, innerHTML);
                     currentElement.Append(childElement);
-                    currentElement = childElement;
+                    if (selection.Contains("/>"))
+                    {
+                        childElement.IsSelfClosing = true;
+                    }
+                    else
+                        currentElement = childElement;
                 }
                 else
                     currentElement = currentElement.ParentElement;
