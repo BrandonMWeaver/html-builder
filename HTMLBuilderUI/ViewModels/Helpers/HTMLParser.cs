@@ -10,11 +10,10 @@ namespace HTMLBuilderUI.ViewModels.Helpers
 {
     static class HTMLParser
     {
-        //private static readonly Regex elementOrderExpression = new Regex(@"(\<(.*?)\>)(\w.+)?(?=<)|(\<(.*?)\>)");
-        private static readonly Regex elementOrderExpression = new Regex(@"(<.+?>)([^<\n]?)+|(<.+?>)");
+        private static readonly Regex elementOrderExpression = new Regex("<[^!].*?>[\\s\\S]*?(?=(?<!\"[\\s\\w]*|\"[\\s\\w]*<.*>[\\s\\w]*)</?\\w+.*?>)|(<[^!].*>)");
         private static readonly Regex elementTypeExpression = new Regex(@"(?<=<)\w+");
-        private static readonly Regex elementPropertiesExpression = new Regex("\\w+=\".+?(?<=\")");
-        private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\w\s.]+");
+        private static readonly Regex elementPropertiesExpression = new Regex("\\w+=\"[\\s\\S]+?(?<=\")");
+        private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\s\S]*");
 
         public static List<ElementModel> Parse(string document)
         {
@@ -25,6 +24,7 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             string currentElementInnerHTML = elementInnerHTMLExpression.Match(elementOrderTree[0]).ToString();
 
             ElementModel currentElement = new ElementModel(currentElementType, currentElementProperties, currentElementInnerHTML);
+            currentElement.ClosingTag = GetElementClosingString(0, elementOrderTree);
             currentElement.ParentElement = currentElement;
             elementOrderTree.Remove(elementOrderTree[0]);
             List<ElementModel> elementTree = new List<ElementModel>()
@@ -41,13 +41,18 @@ namespace HTMLBuilderUI.ViewModels.Helpers
                     string innerHTML = elementInnerHTMLExpression.Match(selection).ToString();
 
                     ElementModel childElement = new ElementModel(type, properties, innerHTML);
+
                     currentElement.Append(childElement);
-                    if (selection.Contains("/>"))
+                    if (ElementIsSelfClosing(selection))
                     {
                         childElement.IsSelfClosing = true;
                     }
                     else
+                    {
+                        string closingString = GetElementClosingString(elementOrderTree.IndexOf(selection), elementOrderTree);
+                        childElement.ClosingTag = closingString;
                         currentElement = childElement;
+                    }
                 }
                 else
                     currentElement = currentElement.ParentElement;
@@ -60,10 +65,7 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             List<string> matches = new List<string>();
             foreach (Match match in elementOrderExpression.Matches(document))
             {
-                if (match.ToString() != string.Empty && !match.ToString().Contains("!DOCTYPE"))
-                {
-                    matches.Add(match.ToString());
-                }
+                matches.Add(match.ToString());
             }
             return matches;
         }
@@ -74,6 +76,41 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             foreach (Match propertyMatch in elementPropertiesExpression.Matches(element))
                 elementProperties.Add(propertyMatch.ToString());
             return elementProperties;
+        }
+
+        private static string GetElementClosingString(int selectionIndex, List<string> elementOrderString)
+        {
+            string selectionType = elementTypeExpression.Match(elementOrderString[selectionIndex]).ToString();
+            System.Diagnostics.Debug.WriteLine(selectionType);
+            int i = selectionIndex + 1;
+            while (!elementOrderString[i].StartsWith($"</{selectionType}"))
+            {
+                if (elementOrderString[i].StartsWith($"<{selectionType}"))
+                {
+                    i++;
+                }
+                i++;
+            }
+            return elementOrderString[i];
+        }
+
+        private static bool ElementIsSelfClosing(string selection)
+        {
+            return selection.Contains("/>")
+                || selection.StartsWith("<area")
+                || selection.StartsWith("<base")
+                || selection.StartsWith("<br")
+                || selection.StartsWith("<col")
+                || selection.StartsWith("<embed")
+                || selection.StartsWith("<hr")
+                || selection.StartsWith("<img")
+                || selection.StartsWith("<input")
+                || selection.StartsWith("<link")
+                || selection.StartsWith("<meta")
+                || selection.StartsWith("<param")
+                || selection.StartsWith("<source")
+                || selection.StartsWith("<track")
+                || selection.StartsWith("<wbr");
         }
     }
 }

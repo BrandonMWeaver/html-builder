@@ -17,6 +17,7 @@ namespace HTMLBuilderUI.HTML.Models
         public string Type { get; set; }
         public string InnerHTML { get; set; }
         public List<string> Fields { get; set; }
+        public string ClosingTag { get; set; }
 
         public bool IsSelfClosing { get; set; }
 
@@ -39,6 +40,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = new List<string>();
             this.Elements = new ObservableCollection<ElementModel>();
+            this.ClosingTag = $"</{type}>";
             this.IsSelfClosing = false;
         }
 
@@ -49,6 +51,7 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = fields;
             this.Elements = new ObservableCollection<ElementModel>();
+            this.ClosingTag = $"</{type}>";
             this.IsSelfClosing = false;
         }
 
@@ -82,23 +85,8 @@ namespace HTMLBuilderUI.HTML.Models
                 elementFields = $"{elementFields} {field}";
             }
             if (this.IsSelfClosing)
-            {
-                if (this.InnerHTML != string.Empty)
-                    return $"<{this.Type}{elementFields} />{this.InnerHTML}";
-                else
-                    return $"\n{this.Indentation}<{this.Type}{elementFields} />";
-            }
-            else
-            {
-                if (this.InnerHTML != string.Empty && elementChildren != string.Empty)
-                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
-                else if (this.InnerHTML != string.Empty)
-                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}</{this.Type}>";
-                else if (elementChildren != string.Empty)
-                    return $"\n{this.Indentation}<{this.Type}{elementFields}>{elementChildren}\n{this.Indentation}</{this.Type}>";
-                else
-                    return $"\n{this.Indentation}<{this.Type}{elementFields}></{this.Type}>";
-            }
+                return $"<{this.Type}{elementFields} />{this.InnerHTML}";
+            return $"<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}{this.ClosingTag}";
         }
     }
 }

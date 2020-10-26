@@ -140,8 +140,7 @@
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
                 <ScrollViewer Grid.Row="0"
-                              HorizontalScrollBarVisibility="Visible"
-                              Background="#373769">
+                              HorizontalScrollBarVisibility="Visible">
                     <TextBlock FontFamily="Consolas"
                                Text="{Binding Document}"
                                Foreground="#FF9B05" />
