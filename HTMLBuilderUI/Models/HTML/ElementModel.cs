@@ -17,9 +17,10 @@ namespace HTMLBuilderUI.HTML.Models
         public string Type { get; set; }
         public string InnerHTML { get; set; }
         public List<string> Fields { get; set; }
-        public string ClosingTag { get; set; }
 
         public bool IsSelfClosing { get; set; }
+        public bool IsInline { get; set; }
+        public bool IsInlineParent { get; set; }
 
         private ObservableCollection<ElementModel> _elements;
 
@@ -40,8 +41,9 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = new List<string>();
             this.Elements = new ObservableCollection<ElementModel>();
-            this.ClosingTag = $"</{type}>";
             this.IsSelfClosing = false;
+            this.IsInline = false;
+            this.IsInlineParent = false;
         }
 
         public ElementModel(string type, List<string> fields, string innerHTML = "")
@@ -51,8 +53,9 @@ namespace HTMLBuilderUI.HTML.Models
             this.InnerHTML = innerHTML;
             this.Fields = fields;
             this.Elements = new ObservableCollection<ElementModel>();
-            this.ClosingTag = $"</{type}>";
             this.IsSelfClosing = false;
+            this.IsInline = false;
+            this.IsInlineParent = false;
         }
 
         public void Append(ElementModel element)
@@ -77,6 +80,8 @@ namespace HTMLBuilderUI.HTML.Models
             string elementChildren = "";
             foreach (ElementModel element in this.Elements)
             {
+                if (this.IsInlineParent)
+                    element.IsInline = true;
                 elementChildren = $"{elementChildren}{element}";
             }
             string elementFields = "";
@@ -84,9 +89,16 @@ namespace HTMLBuilderUI.HTML.Models
             {
                 elementFields = $"{elementFields} {field}";
             }
-            if (this.IsSelfClosing)
+            if (this.IsSelfClosing && this.IsInline)
                 return $"<{this.Type}{elementFields} />{this.InnerHTML}";
-            return $"<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}{this.ClosingTag}";
+            else if (this.IsSelfClosing)
+                return $"\n{this.Indentation}<{this.Type}{elementFields} />{this.InnerHTML}";
+            else if (this.IsInline)
+                return $"<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
+            else if (this.IsInlineParent)
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}</{this.Type}>";
+            else
+                return $"\n{this.Indentation}<{this.Type}{elementFields}>{this.InnerHTML}{elementChildren}\n{this.Indentation}</{this.Type}>";
         }
     }
 }

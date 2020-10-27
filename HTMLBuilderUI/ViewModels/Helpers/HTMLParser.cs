@@ -13,46 +13,41 @@ namespace HTMLBuilderUI.ViewModels.Helpers
         private static readonly Regex elementOrderExpression = new Regex("<[^!].*?>[\\s\\S]*?(?=(?<!\"[\\s\\w]*|\"[\\s\\w]*<.*>[\\s\\w]*)</?\\w+.*?>)|(<[^!].*>)");
         private static readonly Regex elementTypeExpression = new Regex(@"(?<=<)\w+");
         private static readonly Regex elementPropertiesExpression = new Regex("\\w+=\"[\\s\\S]+?(?<=\")");
-        private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\s\S]*");
+        private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\s\S]*?(?=\s*</?\w)");
 
         public static List<ElementModel> Parse(string document)
         {
             List<string> elementOrderTree = GetElementOrderTree(document);
 
-            string currentElementType = elementTypeExpression.Match(elementOrderTree[0]).ToString();
+            string currentElementType = GetElementType(elementOrderTree[0]);
             List<string> currentElementProperties = GetElementProperties(elementOrderTree[0]);
-            string currentElementInnerHTML = elementInnerHTMLExpression.Match(elementOrderTree[0]).ToString();
-
+            string currentElementInnerHTML = GetElementInnerHTML(elementOrderTree[0]);
             ElementModel currentElement = new ElementModel(currentElementType, currentElementProperties, currentElementInnerHTML);
-            currentElement.ClosingTag = GetElementClosingString(0, elementOrderTree);
+
+            currentElement.Depth = 0;
             currentElement.ParentElement = currentElement;
+
             elementOrderTree.Remove(elementOrderTree[0]);
+
             List<ElementModel> elementTree = new List<ElementModel>()
             {
                 currentElement
             };
 
-            foreach (string selection in elementOrderTree)
+            foreach(string selection in elementOrderTree)
             {
                 if (!selection.StartsWith("</"))
                 {
-                    string type = elementTypeExpression.Match(selection).ToString();
-                    List<string> properties = GetElementProperties(selection);
-                    string innerHTML = elementInnerHTMLExpression.Match(selection).ToString();
+                    ElementModel nextElement = new ElementModel(GetElementType(selection), GetElementProperties(selection), GetElementInnerHTML($"{selection}</a"));
+                    currentElement.Append(nextElement);
 
-                    ElementModel childElement = new ElementModel(type, properties, innerHTML);
+                    if (!selection.Split('>')[1].StartsWith("\n"))
+                        nextElement.IsInlineParent = true;
 
-                    currentElement.Append(childElement);
                     if (ElementIsSelfClosing(selection))
-                    {
-                        childElement.IsSelfClosing = true;
-                    }
+                        nextElement.IsSelfClosing = true;
                     else
-                    {
-                        string closingString = GetElementClosingString(elementOrderTree.IndexOf(selection), elementOrderTree);
-                        childElement.ClosingTag = closingString;
-                        currentElement = childElement;
-                    }
+                        currentElement = nextElement;
                 }
                 else
                     currentElement = currentElement.ParentElement;
@@ -70,28 +65,22 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             return matches;
         }
 
-        private static List<string> GetElementProperties(string element)
+        private static string GetElementType(string selection)
+        {
+            return elementTypeExpression.Match(selection).ToString();
+        }
+
+        private static List<string> GetElementProperties(string selection)
         {
             List<string> elementProperties = new List<string>();
-            foreach (Match propertyMatch in elementPropertiesExpression.Matches(element))
+            foreach (Match propertyMatch in elementPropertiesExpression.Matches(selection))
                 elementProperties.Add(propertyMatch.ToString());
             return elementProperties;
         }
 
-        private static string GetElementClosingString(int selectionIndex, List<string> elementOrderString)
+        private static string GetElementInnerHTML(string selection)
         {
-            string selectionType = elementTypeExpression.Match(elementOrderString[selectionIndex]).ToString();
-            System.Diagnostics.Debug.WriteLine(selectionType);
-            int i = selectionIndex + 1;
-            while (!elementOrderString[i].StartsWith($"</{selectionType}"))
-            {
-                if (elementOrderString[i].StartsWith($"<{selectionType}"))
-                {
-                    i++;
-                }
-                i++;
-            }
-            return elementOrderString[i];
+            return elementInnerHTMLExpression.Match(selection).ToString();
         }
 
         private static bool ElementIsSelfClosing(string selection)
