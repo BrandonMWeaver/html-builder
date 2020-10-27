@@ -82,6 +82,8 @@ namespace HTMLBuilderUI.HTML.Models
             {
                 if (this.IsInlineParent)
                     element.IsInline = true;
+                else
+                    element.IsInline = false;
                 elementChildren = $"{elementChildren}{element}";
             }
             string elementFields = "";

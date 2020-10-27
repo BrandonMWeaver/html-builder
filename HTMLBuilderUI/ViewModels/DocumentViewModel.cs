@@ -101,6 +101,18 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
+        private bool _isInlineParent;
+
+        public bool IsInlineParent
+        {
+            get { return this._isInlineParent; }
+            set
+            {
+                this._isInlineParent = value;
+                this.OnPropertyChanged(nameof(this.IsInlineParent));
+            }
+        }
+
         private bool _openInBrowserAvailable;
 
         public bool OpenInBrowserAvailable
@@ -212,6 +224,8 @@ namespace HTMLBuilderUI.ViewModels
 
             this.FilePath = string.Empty;
 
+            this.IsInlineParent = false;
+
             this.New();
         }
 
@@ -239,6 +253,8 @@ namespace HTMLBuilderUI.ViewModels
             this.Type = string.Empty;
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
+
+            this.IsInlineParent = false;
 
             this.SelectElementAvailable = false;
 
@@ -341,6 +357,8 @@ namespace HTMLBuilderUI.ViewModels
 
         public void AppendElement()
         {
+            ElementModel element;
+
             if (this.Fields != string.Empty)
             {
                 Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
@@ -349,14 +367,21 @@ namespace HTMLBuilderUI.ViewModels
                 {
                     properties.Add(property.ToString());
                 }
-                this.SelectedElement.Append(new ElementModel(this.Type, properties, this.InnerHTML));
+                element = new ElementModel(this.Type, properties, this.InnerHTML);
+                element.IsInlineParent = this.IsInlineParent;
+                this.SelectedElement.Append(element);
             }
             else
-                this.SelectedElement.Append(new ElementModel(this.Type, this.InnerHTML));
+            {
+                element = new ElementModel(this.Type, this.InnerHTML);
+                element.IsInlineParent = IsInlineParent;
+                this.SelectedElement.Append(element);
+            }
             this.Type = string.Empty;
             this.Fields = string.Empty;
             this.InnerHTML = string.Empty;
 
+            this.IsInlineParent = false;
             this.BuildDocument();
         }
 

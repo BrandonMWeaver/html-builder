@@ -168,6 +168,7 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
                         <RowDefinition Height="35" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0"
@@ -201,7 +202,16 @@
                              Text="{Binding SelectedElement.InnerHTML, Mode=TwoWay}"
                              Foreground="#FFF"
                              Background="#373769" />
-                    <Grid Grid.Row="4">
+                    <Grid Grid.Row="4"
+                          Margin="5 5 5 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0"
+                                  IsChecked="{Binding SelectedElement.IsInlineParent, Mode=TwoWay}" />
+                    </Grid>
+                    <Grid Grid.Row="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -231,6 +241,7 @@
                         <RowDefinition Height="30" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="30" />
                         <RowDefinition Height="35" />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0"
@@ -264,7 +275,16 @@
                              Text="{Binding InnerHTML, Mode=TwoWay}"
                              Foreground="#FFF"
                              Background="#373769" />
-                    <Button Grid.Row="4"
+                    <Grid Grid.Row="4"
+                          Margin="5 5 5 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0"
+                                  IsChecked="{Binding IsInlineParent, Mode=TwoWay}" />
+                    </Grid>
+                    <Button Grid.Row="5"
                             Margin="5"
                             FontFamily="Consolas"
                             Content="Append"
