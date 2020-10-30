@@ -60,6 +60,7 @@
     <Compile Include="ViewModels\Commands\ParameterlessCommand.cs" />
     <Compile Include="Models\Parents\NotificationBase.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\DocumentViewModelControls\SelectPreviousElementControl.cs" />
     <Compile Include="ViewModels\Helpers\HTMLParser.cs" />
     <Compile Include="Views\DocumentView.xaml.cs">
       <DependentUpon>DocumentView.xaml</DependentUpon>
