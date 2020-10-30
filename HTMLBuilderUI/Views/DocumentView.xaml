@@ -190,7 +190,7 @@
                              AcceptsReturn="True"
                              TextWrapping="WrapWithOverflow"
                              FontFamily="Consolas"
-                             Text="{Binding SelectedElementFieldsString, Mode=TwoWay}"
+                             Text="{Binding SelectedElementAttributesString, Mode=TwoWay}"
                              Foreground="#FFF"
                              Background="#373769" />
                     <TextBox Grid.Row="3"
@@ -263,7 +263,7 @@
                              AcceptsReturn="True"
                              TextWrapping="WrapWithOverflow"
                              FontFamily="Consolas"
-                             Text="{Binding Fields, Mode=TwoWay}"
+                             Text="{Binding Attributes, Mode=TwoWay}"
                              Foreground="#FFF"
                              Background="#373769" />
                     <TextBox Grid.Row="3"

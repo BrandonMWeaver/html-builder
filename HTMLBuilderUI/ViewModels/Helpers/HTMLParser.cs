@@ -12,7 +12,7 @@ namespace HTMLBuilderUI.ViewModels.Helpers
     {
         private static readonly Regex elementOrderExpression = new Regex("<[^!].*?>[\\s\\S]*?(?=(?<!\"[\\s\\w]*|\"[\\s\\w]*<.*>[\\s\\w]*)</?\\w+.*?>)|(<[^!].*>)");
         private static readonly Regex elementTypeExpression = new Regex(@"(?<=<)\w+");
-        private static readonly Regex elementPropertiesExpression = new Regex("\\w+=\"[\\s\\S]+?(?<=\")");
+        private static readonly Regex elementAttributesExpression = new Regex("\\w+=\"[\\s\\S]+?(?<=\")");
         private static readonly Regex elementInnerHTMLExpression = new Regex(@"(?<=>)[\s\S]*?(?=\s*</?\w)");
 
         public static List<ElementModel> Parse(string document)
@@ -20,9 +20,9 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             List<string> elementOrderTree = GetElementOrderTree(document);
 
             string currentElementType = GetElementType(elementOrderTree[0]);
-            List<string> currentElementProperties = GetElementProperties(elementOrderTree[0]);
+            List<string> currentElementAttributes = GetElementAttributes(elementOrderTree[0]);
             string currentElementInnerHTML = GetElementInnerHTML(elementOrderTree[0]);
-            ElementModel currentElement = new ElementModel(currentElementType, currentElementProperties, currentElementInnerHTML);
+            ElementModel currentElement = new ElementModel(currentElementType, currentElementAttributes, currentElementInnerHTML);
 
             currentElement.Depth = 0;
             currentElement.ParentElement = currentElement;
@@ -38,7 +38,7 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             {
                 if (!selection.StartsWith("</"))
                 {
-                    ElementModel nextElement = new ElementModel(GetElementType(selection), GetElementProperties(selection), GetElementInnerHTML($"{selection}</a"));
+                    ElementModel nextElement = new ElementModel(GetElementType(selection), GetElementAttributes(selection), GetElementInnerHTML($"{selection}</a"));
                     currentElement.Append(nextElement);
 
                     if (!selection.Split('>')[1].StartsWith("\n"))
@@ -55,6 +55,14 @@ namespace HTMLBuilderUI.ViewModels.Helpers
             return elementTree;
         }
 
+        public static List<string> GetElementAttributes(string selection)
+        {
+            List<string> elementAttributes = new List<string>();
+            foreach (Match attributeMatch in elementAttributesExpression.Matches(selection))
+                elementAttributes.Add(attributeMatch.ToString());
+            return elementAttributes;
+        }
+
         private static List<string> GetElementOrderTree(string document)
         {
             List<string> matches = new List<string>();
@@ -68,14 +76,6 @@ namespace HTMLBuilderUI.ViewModels.Helpers
         private static string GetElementType(string selection)
         {
             return elementTypeExpression.Match(selection).ToString();
-        }
-
-        private static List<string> GetElementProperties(string selection)
-        {
-            List<string> elementProperties = new List<string>();
-            foreach (Match propertyMatch in elementPropertiesExpression.Matches(selection))
-                elementProperties.Add(propertyMatch.ToString());
-            return elementProperties;
         }
 
         private static string GetElementInnerHTML(string selection)

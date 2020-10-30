@@ -53,18 +53,6 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
-        private string _selectedElementFieldsString;
-
-        public string SelectedElementFieldsString
-        {
-            get { return this._selectedElementFieldsString; }
-            set
-            {
-                this._selectedElementFieldsString = value;
-                this.OnPropertyChanged(nameof(this.SelectedElementFieldsString));
-            }
-        }
-
         private string _type;
 
         public string Type
@@ -77,15 +65,15 @@ namespace HTMLBuilderUI.ViewModels
             }
         }
 
-        private string _fields;
+        private string _attributes;
 
-        public string Fields
+        public string Attributes
         {
-            get { return this._fields; }
+            get { return this._attributes; }
             set
             {
-                this._fields = value;
-                this.OnPropertyChanged(nameof(this.Fields));
+                this._attributes = value;
+                this.OnPropertyChanged(nameof(this.Attributes));
             }
         }
 
@@ -98,6 +86,18 @@ namespace HTMLBuilderUI.ViewModels
             {
                 this._innerHTML = value;
                 this.OnPropertyChanged(nameof(this.InnerHTML));
+            }
+        }
+
+        private string _selectedElementAttributesString;
+
+        public string SelectedElementAttributesString
+        {
+            get { return this._selectedElementAttributesString; }
+            set
+            {
+                this._selectedElementAttributesString = value;
+                this.OnPropertyChanged(nameof(this.SelectedElementAttributesString));
             }
         }
 
@@ -202,9 +202,9 @@ namespace HTMLBuilderUI.ViewModels
             }
             this.Document = $"<!DOCTYPE html>{html}";
 
-            this.SelectedElementFieldsString = string.Empty;
+            this.SelectedElementAttributesString = string.Empty;
             this.Type = string.Empty;
-            this.Fields = string.Empty;
+            this.Attributes = string.Empty;
             this.InnerHTML = string.Empty;
 
             this.IsInlineParent = false;
@@ -264,7 +264,7 @@ namespace HTMLBuilderUI.ViewModels
         public void SelectElement(ElementModel element)
         {
             this.SelectedElement = element;
-            this.SelectedElementFieldsString = string.Join("\n", this.SelectedElement.Fields);
+            this.SelectedElementAttributesString = string.Join("\n", this.SelectedElement.Attributes);
 
             if (this.SelectedElement != this.Elements[0])
             {
@@ -280,18 +280,13 @@ namespace HTMLBuilderUI.ViewModels
 
         public void BuildDocument()
         {
-            if (this.SelectedElementFieldsString != string.Empty)
+            if (this.SelectedElementAttributesString != string.Empty)
             {
-                Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
-                List<string> properties = new List<string>();
-                foreach (Match property in propertyRegex.Matches(this.SelectedElementFieldsString))
-                {
-                    properties.Add(property.ToString());
-                }
-                this.SelectedElement.Fields = new List<string>(properties);
+                List<string> properties = HTMLParser.GetElementAttributes(this.SelectedElementAttributesString);
+                this.SelectedElement.Attributes = new List<string>(properties);
             }
             else
-                this.SelectedElement.Fields = new List<string>();
+                this.SelectedElement.Attributes = new List<string>();
 
             string html = string.Empty;
             foreach (ElementModel element in this.Elements)
@@ -312,14 +307,9 @@ namespace HTMLBuilderUI.ViewModels
         {
             ElementModel element;
 
-            if (this.Fields != string.Empty)
+            if (this.Attributes != string.Empty)
             {
-                Regex propertyRegex = new Regex("\\w+=\".+?(?<=\")");
-                List<string> properties = new List<string>();
-                foreach (Match property in propertyRegex.Matches(this.Fields))
-                {
-                    properties.Add(property.ToString());
-                }
+                List<string> properties = HTMLParser.GetElementAttributes(this.Attributes);
                 element = new ElementModel(this.Type, properties, this.InnerHTML);
                 element.IsInlineParent = this.IsInlineParent;
                 this.SelectedElement.Append(element);
@@ -331,7 +321,7 @@ namespace HTMLBuilderUI.ViewModels
                 this.SelectedElement.Append(element);
             }
             this.Type = string.Empty;
-            this.Fields = string.Empty;
+            this.Attributes = string.Empty;
             this.InnerHTML = string.Empty;
 
             this.IsInlineParent = false;
